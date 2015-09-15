@@ -1,0 +1,9 @@
+- tileset Assets/Textures/tileset.png
+- dirt Assets/Textures/dirt.png
+- grass Assets/Textures/grass.png
++ 1 tileset 672 160 32 32 0
++ 2 dirt 32 96 32 32 0
++ 3 tileset 672 352 32 32 0
++ 4 tileset 704 352 32 32 0
++ 5 tileset 736 352 32 32 0
++ 6 tileset 224 386 32 32 1
