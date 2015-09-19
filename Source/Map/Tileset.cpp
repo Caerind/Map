@@ -7,11 +7,13 @@ Tileset::Tileset(std::string const& name, std::string const& filename)
 {
     mName = name;
     mFilename = filename;
-    if (!ah::Application::instance().isTextureLoaded(mName))
-    {
-        ah::Application::instance().loadTexture(mName,mFilename);
-    }
-    mTexture = &ah::Application::instance().getTexture(mName);
+    mTexture = new sf::Texture();
+    assert(mTexture->loadFromFile(mFilename));
+}
+
+Tileset::~Tileset()
+{
+    delete mTexture;
 }
 
 std::string Tileset::getName() const

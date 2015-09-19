@@ -3,14 +3,13 @@
 
 #include <vector>
 #include <map>
+#include <sstream>
 #include <string>
 #include <fstream>
 
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Vector2.hpp>
-
-#include "../../Aharos/Helper/String.hpp"
 
 #include "Tileset.hpp"
 

@@ -12,6 +12,8 @@ TilesetManager::TilesetManager()
 
 void TilesetManager::load(std::string const& path)
 {
+    // TODO : This need to be FIXED
+
     std::ifstream file(path + "tilesets.dat");
     if (file)
     {
@@ -37,7 +39,11 @@ void TilesetManager::load(std::string const& path)
                     std::size_t find = line.find_first_of(' ');
                     if (find != std::string::npos)
                     {
-                        int id = lp::from_string<int>(line.substr(0, find));
+                        int id;
+                        {
+                            std::istringstream iss(line.substr(0, find));
+                            iss >> id;
+                        }
                         line = line.substr(find+1,line.size()-find-1);
                         find = line.find_first_of(' ');
                         if (find != std::string::npos)
@@ -48,23 +54,39 @@ void TilesetManager::load(std::string const& path)
                             if (find != std::string::npos)
                             {
                                 sf::IntRect tRect;
-                                tRect.left = lp::from_string<int>(line.substr(0, find));
+                                {
+                                    std::istringstream iss(line.substr(0, find));
+                                    iss >> tRect.left;
+                                }
                                 line = line.substr(find+1,line.size()-find-1);
                                 find = line.find_first_of(' ');
                                 if (find != std::string::npos)
                                 {
-                                    tRect.top = lp::from_string<int>(line.substr(0, find));
+                                    {
+                                        std::istringstream iss(line.substr(0, find));
+                                        iss >> tRect.top;
+                                    }
                                     line = line.substr(find+1,line.size()-find-1);
                                     find = line.find_first_of(' ');
                                     if (find != std::string::npos)
                                     {
-                                        tRect.width = lp::from_string<int>(line.substr(0, find));
+                                        {
+                                            std::istringstream iss(line.substr(0, find));
+                                            iss >> tRect.width;
+                                        }
                                         line = line.substr(find+1,line.size()-find-1);
                                         find = line.find_first_of(' ');
                                         if (find != std::string::npos)
                                         {
-                                            tRect.height = lp::from_string<int>(line.substr(0, find));
-                                            bool collide = lp::from_string<bool>(line.substr(find+1,line.size()-find-1));
+                                            {
+                                                std::istringstream iss(line.substr(0, find));
+                                                iss >> tRect.height;
+                                            }
+                                            bool collide;
+                                            {
+                                                std::istringstream iss(line.substr(find+1,line.size()-find-1));
+                                                iss >> collide;
+                                            }
                                             bind(id,name,tRect,collide);
                                         }
                                     }
@@ -146,12 +168,9 @@ std::pair<sf::Texture*,sf::IntRect> TilesetManager::getPair(int id)
             }
         }
     }
-    else
-    {
-        pair.first = nullptr;
-        pair.second = sf::IntRect();
-        return pair;
-    }
+    pair.first = nullptr;
+    pair.second = sf::IntRect();
+    return pair;
 }
 
 bool TilesetManager::isCollide(int id)

@@ -5,7 +5,7 @@
 
 #include <SFML/Graphics/Texture.hpp>
 
-#include "../../Aharos/Application/Application.hpp"
+#include <cassert>
 
 namespace map
 {
@@ -14,6 +14,7 @@ class Tileset
 {
     public:
         Tileset(std::string const& name, std::string const& filename);
+        ~Tileset();
 
         std::string getName() const;
         std::string getFilename() const;

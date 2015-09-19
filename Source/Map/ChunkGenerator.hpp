@@ -1,37 +1,34 @@
 #ifndef MAP_CHUNKGENERATOR_HPP
 #define MAP_CHUNKGENERATOR_HPP
 
-#include "Map.hpp"
-#include "Chunk.hpp"
+#include <memory>
+
+#include "TilesetManager.hpp"
+#include "Properties.hpp"
 
 namespace map
 {
 
-template <typename T>
+class Map;
+class Chunk;
+
 class ChunkGenerator
 {
     public:
-        static void generate(Chunk<T,ChunkGenerator<T>>& chunk);
+        friend Map;
 
-        static void setMap(Map<T,ChunkGenerator<T>>* map);
+        typedef std::unique_ptr<ChunkGenerator> Ptr;
+
+        ChunkGenerator();
+        ~ChunkGenerator();
+
+        void generate(Chunk& chunk);
+
+        // TODO : Add random generator in it
 
     private:
-        static Map<T,ChunkGenerator<T>>* mMap;
+        Map* mMap;
 };
-
-template<typename T>
-Map<T,ChunkGenerator<T>>* ChunkGenerator<T>::mMap = nullptr;
-
-template <typename T>
-void ChunkGenerator<T>::generate(Chunk<T,ChunkGenerator<T>>& chunk)
-{
-}
-
-template <typename T>
-void ChunkGenerator<T>::setMap(Map<T,ChunkGenerator<T>>* map)
-{
-    mMap = map;
-}
 
 } // namespace map
 
