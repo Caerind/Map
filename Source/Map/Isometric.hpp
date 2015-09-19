@@ -1,18 +1,13 @@
-#ifndef MAP_ISOMETRIC_HPP
-#define MAP_ISOMETRIC_HPP
+#ifndef ISOMETRIC_HPP
+#define ISOMETRIC_HPP
 
 #include "Properties.hpp"
 
-namespace map
-{
-
-class Isometric : public Properties
+class Isometric : public map::Properties
 {
     public:
         static void init();
 };
 
-} // namespace map
-
-#endif // MAP_ISOMETRIC_HPP
+#endif // ISOMETRIC_HPP
 

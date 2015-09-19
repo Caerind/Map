@@ -12,6 +12,7 @@
 #include <SFML/System/Vector2.hpp>
 
 #include "Tileset.hpp"
+#include "Animation.hpp"
 
 namespace map
 {
@@ -19,24 +20,19 @@ namespace map
 class TilesetManager
 {
     public:
-        static void load(std::string const& path);
-        static void save(std::string const& path);
-
-        static void addTileset(std::string const& name, std::string const& filename);
+        static void addTileset(std::string const& name, std::string const& filename, sf::Texture* texture = nullptr);
         static void bind(int id, std::string const& name, sf::IntRect const& texRect, bool collide);
+        static void addAnimation(Animation const& animation);
+
         static std::pair<sf::Texture*,sf::IntRect> getPair(int id);
         static bool isCollide(int id);
-
-        static std::map<int,std::pair<std::string,sf::IntRect>>& getMap();
+        static std::vector<Animation> getAnimations();
 
     private:
-        TilesetManager();
-        static TilesetManager mInstance;
-
-        std::vector<Tileset> mTilesets;
-        std::map<int,std::pair<std::string,sf::IntRect>> mPairs;
-        std::map<int,bool> mCollisions;
-        bool mSaveNeeded;
+        static std::vector<Tileset> mTilesets;
+        static std::map<int,std::pair<std::string,sf::IntRect>> mPairs;
+        static std::map<int,bool> mCollisions;
+        static std::vector<Animation> mAnimations;
 };
 
 } // namespace map

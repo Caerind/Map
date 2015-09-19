@@ -1,21 +1,16 @@
-#ifndef MAP_DEFAULTGEN_HPP
-#define MAP_DEFAULTGEN_HPP
+#ifndef DEFAULTGEN_HPP
+#define DEFAULTGEN_HPP
 
 #include "TilesetManager.hpp"
 #include "Properties.hpp"
 #include "ChunkGenerator.hpp"
 
-namespace map
-{
-
 class Chunk;
 
-class DefaultGen : public ChunkGenerator
+class DefaultGen : public map::ChunkGenerator
 {
     public:
-        void generate(Chunk& chunk);
+        void generate(map::Chunk& chunk);
 };
 
-} // namespace map
-
-#endif // MAP_DEFAULTGEN_HPP
+#endif // DEFAULTGEN_HPP

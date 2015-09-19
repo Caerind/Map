@@ -21,7 +21,7 @@ namespace map
 class Map
 {
     public:
-        Map(ChunkGenerator::Ptr generator);
+        Map(ChunkGenerator* generator);
         ~Map();
 
         void load();
@@ -43,11 +43,10 @@ class Map
 
         void addAnimation(Animation a);
 
-
         // TODO : Online Map
 
     private:
-        ChunkGenerator::Ptr mGenerator;
+        ChunkGenerator* mGenerator;
         std::vector<Chunk> mChunks;
         std::vector<Animation> mAnimations;
 };

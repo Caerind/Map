@@ -13,7 +13,7 @@ namespace map
 class Tileset
 {
     public:
-        Tileset(std::string const& name, std::string const& filename);
+        Tileset(std::string const& name, std::string const& filename, sf::Texture* texture = nullptr);
         ~Tileset();
 
         std::string getName() const;

@@ -3,85 +3,21 @@
 namespace map
 {
 
-Map::Map(ChunkGenerator::Ptr generator)
-: mGenerator(std::move(generator))
+Map::Map(ChunkGenerator* generator)
+: mGenerator(generator)
 {
-    if (mGenerator != nullptr)
+    if (mGenerator == nullptr)
     {
-        mGenerator->mMap = this;
+        mGenerator = new ChunkGenerator();
     }
+    mGenerator->mMap = this;
+    mAnimations = TilesetManager::getAnimations();
 }
 
 Map::~Map()
 {
-    if (mGenerator != nullptr)
-    {
-        mGenerator->mMap = nullptr;
-        mGenerator = nullptr;
-    }
-}
-
-void Map::load()
-{
-    TilesetManager::load(Properties::getPath());
-    std::ifstream file(Properties::getPath() + "map.dat");
-    if (file)
-    {
-        std::string line;
-        while (std::getline(file,line))
-        {
-            if (line.size() > 0)
-            {
-                if (line[0] == 'a')
-                {
-                    line.erase(0,2);
-                    Animation a;
-                    std::stringstream ss(line);
-                    std::string temp;
-                    while (std::getline(ss,temp,';'))
-                    {
-                        std::size_t find = temp.find('-');
-                        if (find != std::string::npos)
-                        {
-                            int id;
-                            {
-                                std::istringstream iss(temp.substr(0,find));
-                                iss >> id;
-                            }
-                            float ts;
-                            {
-                                std::istringstream iss(temp.substr(find+1,temp.size()-find-1));
-                                iss >> ts;
-                            }
-                            a.addFrame(id,sf::seconds(ts));
-                        }
-                    }
-                    addAnimation(a);
-                }
-            }
-        }
-    }
-    file.close();
-}
-
-void Map::save()
-{
-    TilesetManager::save(Properties::getPath());
-    std::ofstream file(Properties::getPath() + "map.dat");
-    if (file)
-    {
-        for (std::size_t i = 0; i < mAnimations.size(); i++)
-        {
-            file << "a ";
-            for (std::size_t j = 0; j < mAnimations[i].getFrameCount(); j++)
-            {
-                auto pair = mAnimations[i].getFrame(j);
-                file << pair.first << "-" << pair.second.asSeconds() << ";";
-            }
-            file << std::endl;
-        }
-    }
-    file.close();
+    mGenerator->mMap = nullptr;
+    delete mGenerator;
 }
 
 bool Map::isChunkLoaded(sf::Vector2i const& chunkCoords)

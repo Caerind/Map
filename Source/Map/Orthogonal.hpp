@@ -1,17 +1,12 @@
-#ifndef MAP_ORTHOGONAL_HPP
-#define MAP_ORTHOGONAL_HPP
+#ifndef ORTHOGONAL_HPP
+#define ORTHOGONAL_HPP
 
 #include "Properties.hpp"
 
-namespace map
-{
-
-class Orthogonal : public Properties
+class Orthogonal : public map::Properties
 {
     public:
         static void init();
 };
 
-} // namespace map
-
-#endif // MAP_ORTHOGONAL_HPP
+#endif // ORTHOGONAL_HPP

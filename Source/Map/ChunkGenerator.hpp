@@ -2,6 +2,7 @@
 #define MAP_CHUNKGENERATOR_HPP
 
 #include <memory>
+#include <random>
 
 #include "TilesetManager.hpp"
 #include "Properties.hpp"
@@ -17,17 +18,17 @@ class ChunkGenerator
     public:
         friend Map;
 
-        typedef std::unique_ptr<ChunkGenerator> Ptr;
-
         ChunkGenerator();
         ~ChunkGenerator();
 
-        void generate(Chunk& chunk);
+        virtual void generate(Chunk& chunk);
 
-        // TODO : Add random generator in it
+        float randomFloat(float a, float b);
+        int randomInt(int a, int b);
 
     private:
         Map* mMap;
+        std::mt19937 mRandomGenerator;
 };
 
 } // namespace map

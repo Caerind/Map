@@ -1,8 +1,5 @@
 #include "Isometric.hpp"
 
-namespace map
-{
-
 void Isometric::init()
 {
     // TODO : Do Isometric Init
@@ -99,8 +96,6 @@ void Isometric::init()
         return globalCoordsToWorld(localCoords);
     };
 }
-
-} // namespace map
 
 /*
 

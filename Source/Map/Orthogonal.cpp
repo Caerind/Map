@@ -1,8 +1,5 @@
 #include "Orthogonal.hpp"
 
-namespace map
-{
-
 void Orthogonal::init()
 {
     mTileSize = {32,32};
@@ -97,6 +94,18 @@ void Orthogonal::init()
     {
         return globalCoordsToWorld(localCoords);
     };
-}
 
-} // namespace map
+    map::TilesetManager::addTileset("tileset","Assets/Textures/tileset.png");
+
+    map::TilesetManager::bind(1,"tileset",sf::IntRect(672,160,32,32),0); // Grass
+    map::TilesetManager::bind(2,"tileset",sf::IntRect(224,386,32,32),1); // Water
+    map::TilesetManager::bind(3,"tileset",sf::IntRect(672,352,32,32),0); // Flower1
+    map::TilesetManager::bind(4,"tileset",sf::IntRect(704,352,32,32),0); // Flower2
+    map::TilesetManager::bind(5,"tileset",sf::IntRect(736,352,32,32),0); // Flower3
+
+    map::Animation aFlower;
+    aFlower.addFrame(3,sf::seconds(0.5f));
+    aFlower.addFrame(4,sf::seconds(0.5f));
+    aFlower.addFrame(5,sf::seconds(0.5f));
+    map::TilesetManager::addAnimation(aFlower);
+}

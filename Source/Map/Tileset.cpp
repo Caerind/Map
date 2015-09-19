@@ -3,16 +3,24 @@
 namespace map
 {
 
-Tileset::Tileset(std::string const& name, std::string const& filename)
+Tileset::Tileset(std::string const& name, std::string const& filename, sf::Texture* texture)
 {
     mName = name;
     mFilename = filename;
-    mTexture = new sf::Texture();
-    assert(mTexture->loadFromFile(mFilename));
+    if (texture != nullptr)
+    {
+        mTexture = texture;
+    }
+    else
+    {
+        mTexture = new sf::Texture();
+        assert(mTexture->loadFromFile(mFilename));
+    }
 }
 
 Tileset::~Tileset()
 {
+    mTexture = nullptr;
     delete mTexture;
 }
 

@@ -7,6 +7,8 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/ConvexShape.hpp>
 
+#include "TilesetManager.hpp"
+
 namespace map
 {
 

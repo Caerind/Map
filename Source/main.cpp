@@ -22,17 +22,14 @@ int main()
 
     if (choice == 1)
     {
-        map::Orthogonal::init();
+        Orthogonal::init();
     }
     else if (choice == 2)
     {
-        map::Isometric::init();
+        Isometric::init();
     }
 
-    std::cout << map::Properties::getPath() << std::endl;
-
-    map::Map mMap(std::unique_ptr<map::ChunkGenerator>(new map::ChunkGenerator()));
-    mMap.load();
+    map::Map mMap(new DefaultGen());
 
     sf::RenderWindow window(sf::VideoMode(800,600),"Map");
     sf::View view = window.getView();
@@ -71,11 +68,10 @@ int main()
         mMap.update(view);
 
         window.clear();
+        window.setView(view);
         mMap.render(window,view,0);
         window.display();
     }
-
-    mMap.save();
 
     return 0;
 }
