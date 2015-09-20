@@ -3,11 +3,11 @@
 namespace map
 {
 
-Chunk::Chunk(ChunkGenerator& generator, sf::Vector2i const& coords)
+Chunk::Chunk(sf::Vector2i const& coords, ChunkGenerator& generator)
 : mCoords(coords)
+, mSave(true)
+, mNeedSave(false)
 {
-    mSaveNeeded = false;
-
     if (!load())
     {
         generator.generate(*this);
@@ -15,11 +15,21 @@ Chunk::Chunk(ChunkGenerator& generator, sf::Vector2i const& coords)
     }
 }
 
+Chunk::Chunk(sf::Vector2i const& coords)
+: mCoords(coords)
+, mSave(false)
+, mNeedSave(false)
+{
+}
+
 Chunk::~Chunk()
 {
-    if (mSaveNeeded)
+    if (mSave)
     {
-        save();
+        if (mNeedSave)
+        {
+            save();
+        }
     }
 }
 
@@ -62,7 +72,7 @@ void Chunk::setTileId(sf::Vector2i const& coords, int layer, int id)
     if (layer >= 0 && layer < (int)mLayers.size())
     {
         mLayers.at(layer).setTileId(coords,id);
-        mSaveNeeded = true;
+        mNeedSave = true;
     }
 }
 
@@ -117,7 +127,6 @@ bool Chunk::load()
     std::ifstream file(getPathFromCoords(mCoords));
     if (!file)
     {
-        mSaveNeeded = true;
         return false;
     }
 
@@ -160,7 +169,7 @@ bool Chunk::load()
         coords.y++;
     }
     file.close();
-    mSaveNeeded = false;
+    mNeedSave = false;
     return true;
 }
 
@@ -194,7 +203,7 @@ void Chunk::save()
         file << std::endl;
     }
     file.close();
-    mSaveNeeded = false;
+    mNeedSave = false;
 }
 
 void Chunk::loadFromPacket(sf::Packet& packet)

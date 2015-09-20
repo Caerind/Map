@@ -22,7 +22,8 @@ namespace map
 class Chunk
 {
     public:
-        Chunk(ChunkGenerator& generator, sf::Vector2i const& coords);
+        Chunk(sf::Vector2i const& coords, ChunkGenerator& generator);
+        Chunk(sf::Vector2i const& coords);
         ~Chunk();
 
         void addLayer();
@@ -43,7 +44,6 @@ class Chunk
         sf::Time getElapsedTime() const;
 
         bool load();
-        void generate();
         void save();
 
         void loadFromPacket(sf::Packet& packet);
@@ -53,9 +53,10 @@ class Chunk
 
     private:
         sf::Vector2i mCoords;
+        bool mSave;
+        bool mNeedSave;
         std::vector<Layer> mLayers;
         sf::Clock mClock;
-        bool mSaveNeeded;
 };
 
 } // namespace map

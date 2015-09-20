@@ -9,6 +9,8 @@
 #include <SFML/Graphics/ConvexShape.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/System/Time.hpp>
+#include <SFML/Network/Packet.hpp>
+#include <SFML/Network/TcpSocket.hpp>
 
 #include "TilesetManager.hpp"
 #include "Chunk.hpp"
@@ -21,11 +23,17 @@ namespace map
 class Map
 {
     public:
-        Map(ChunkGenerator* generator);
-        ~Map();
+        enum Type
+        {
+            ClientSolo,
+            ClientOnline,
+            Server,
+        };
 
-        void load();
-        void save();
+        Map(ChunkGenerator* generator); // Client Solo
+        Map(sf::TcpSocket* socket); // Client Multi
+        Map(ChunkGenerator* generator, sf::TcpSocket* socket); // Server
+        ~Map();
 
         bool isChunkLoaded(sf::Vector2i const& chunkCoords);
         sf::Time getChunkLoadedTime() const;
@@ -43,10 +51,24 @@ class Map
 
         void addAnimation(Animation a);
 
-        // TODO : Online Map
+        // Client Reception
+        void receiveChunk(sf::Packet& packet);
+        void receiveTileModification(sf::Packet& packet);
+        // Client Sending
+        void setDefaultPacketChunk(sf::Packet packet);
+        void setDefaultPacketModification(sf::Packet packet);
+        void sendChunkQuery(sf::Vector2i const& coords);
+        void sendTileModificationQuery(sf::Vector2i const& coords, int z, int id);
+        // Server
+        void receiveChunkQuery(sf::Packet& incoming, sf::Packet& out);
+        void receiveModificationQuery(sf::Packet& incoming, sf::Packet& out, bool& queryApplied);
 
     private:
+        Type mType;
         ChunkGenerator* mGenerator;
+        sf::TcpSocket* mSocket;
+        sf::Packet mDefaultPacketChunk;
+        sf::Packet mDefaultPacketModification;
         std::vector<Chunk> mChunks;
         std::vector<Animation> mAnimations;
 };

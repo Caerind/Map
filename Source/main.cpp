@@ -9,6 +9,8 @@
 #include "Map/DefaultGen.hpp"
 #include "Map/ChunkGenerator.hpp"
 
+#include <SFML/Network.hpp>
+
 int main()
 {
     int choice = 2;
@@ -28,6 +30,14 @@ int main()
     {
         Isometric::init();
     }
+
+    sf::Packet p1;
+    p1 << "test";
+
+    sf::Packet p2 = p1;
+    std::string s;
+    p2 >> s;
+    std::cout << s << std::endl;
 
     map::Map mMap(new DefaultGen());
 

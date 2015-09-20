@@ -20,9 +20,12 @@ class Animation
         std::pair<int,sf::Time> getFrame(std::size_t index);
         void addFrame(int id, sf::Time t);
         sf::Vector2i update();
+        void setLoop(bool loop);
+        bool isLoop() const;
 
     private:
         sf::Clock mClock;
+        bool mLoop;
         std::size_t mPosition;
         std::vector<std::pair<int,sf::Time>> mFrames;
 };

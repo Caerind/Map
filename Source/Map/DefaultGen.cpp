@@ -14,8 +14,7 @@ void DefaultGen::generate(map::Chunk& chunk)
         }
     }
 
-    int idDeco = randomInt(2,4);
-    if (idDeco == 4) idDeco = 6;
+    int idDeco = randomInt(2,3);
     sf::Vector2i pos = sf::Vector2i(randomInt(8,24),randomInt(8,24));
     std::vector<sf::Vector2i> colored;
     colored.push_back(pos);

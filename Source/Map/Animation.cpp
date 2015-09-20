@@ -6,6 +6,7 @@ namespace map
 Animation::Animation()
 {
     mPosition = 0;
+    mLoop = true;
 }
 
 std::size_t Animation::getFrameCount() const
@@ -33,12 +34,31 @@ sf::Vector2i Animation::update()
         if (mClock.getElapsedTime() > mFrames[mPosition].second)
         {
             std::size_t oldPosition = mPosition;
-            mPosition = (mPosition + 1) % mFrames.size();
             mClock.restart();
+            mPosition++;
+            if (mLoop && mPosition == mFrames.size())
+            {
+                mPosition -= mFrames.size();
+            }
+            else if (!mLoop && mPosition == mFrames.size())
+            {
+                mPosition--;
+                return sf::Vector2i();
+            }
             return sf::Vector2i(mFrames[oldPosition].first,mFrames[mPosition].first);
         }
     }
     return sf::Vector2i();
+}
+
+void Animation::setLoop(bool loop)
+{
+    mLoop = loop;
+}
+
+bool Animation::isLoop() const
+{
+    return mLoop;
 }
 
 } // namespace map
