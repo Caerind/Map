@@ -31,14 +31,6 @@ int main()
         Isometric::init();
     }
 
-    sf::Packet p1;
-    p1 << "test";
-
-    sf::Packet p2 = p1;
-    std::string s;
-    p2 >> s;
-    std::cout << s << std::endl;
-
     map::Map mMap(new DefaultGen());
 
     sf::RenderWindow window(sf::VideoMode(800,600),"Map");
@@ -52,6 +44,17 @@ int main()
             if (event.type == sf::Event::Closed)
             {
                 window.close();
+            }
+            if (event.type == sf::Event::MouseWheelScrolled && event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
+            {
+                if (event.mouseWheelScroll.delta < 1)
+                {
+                    view.zoom(1.2f);
+                }
+                else
+                {
+                    view.zoom(0.8f);
+                }
             }
         }
 
@@ -76,6 +79,18 @@ int main()
         view.move(mvt);
 
         mMap.update(view);
+
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        {
+            sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window),view);
+            std::cout << "--------------------------------" << std::endl;
+            std::cout << "mouse : " << (int)mousePos.x << "/" << (int)mousePos.y << std::endl;
+            sf::Vector2i coords = map::Properties::worldToGlobalCoords(mousePos);
+            std::cout << "coords : " << coords.x << "/" << coords.y << std::endl;
+            sf::Vector2f echo = map::Properties::globalCoordsToWorld(coords);
+            std::cout << "echo : " << echo.x << "/" << echo.y << std::endl;
+            mMap.setTileId(coords,0,2);
+        }
 
         window.clear();
         window.setView(view);

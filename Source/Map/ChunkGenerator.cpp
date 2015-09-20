@@ -23,7 +23,7 @@ void ChunkGenerator::generate(Chunk& chunk)
     {
         for (coords.y = 0; coords.y < size.y; coords.y++)
         {
-            chunk.setTileId(coords,0,0);
+            chunk.setTileId(coords,0,1);
         }
     }
 }

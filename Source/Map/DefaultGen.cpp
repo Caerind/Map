@@ -14,6 +14,7 @@ void DefaultGen::generate(map::Chunk& chunk)
         }
     }
 
+    /*
     int idDeco = randomInt(2,3);
     sf::Vector2i pos = sf::Vector2i(randomInt(8,24),randomInt(8,24));
     std::vector<sf::Vector2i> colored;
@@ -53,4 +54,5 @@ void DefaultGen::generate(map::Chunk& chunk)
     {
         chunk.setTileId(colored[i],0,idDeco);
     }
+    */
 }

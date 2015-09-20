@@ -51,6 +51,7 @@ class Map
 
         void addAnimation(Animation a);
 
+        // TODO : Test Network
         // Client Reception
         void receiveChunk(sf::Packet& packet);
         void receiveTileModification(sf::Packet& packet);

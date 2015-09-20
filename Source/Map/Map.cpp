@@ -101,20 +101,14 @@ void Map::update(sf::View const& view)
     if (mType == Map::Type::ClientSolo || mType == Map::Type::ClientOnline)
     {
         // Load New Chunks
-        std::array<sf::Vector2f,4> arrayF;
-        arrayF[0] = sf::Vector2f(viewRect.left,viewRect.top);
-        arrayF[1] = sf::Vector2f(viewRect.left+viewRect.width,viewRect.top);
-        arrayF[2] = sf::Vector2f(viewRect.left+viewRect.width,viewRect.top+viewRect.height);
-        arrayF[3] = sf::Vector2f(viewRect.left,viewRect.top+viewRect.height);
-        std::array<sf::Vector2i,4> arrayI;
-        for (std::size_t i = 0; i < arrayF.size(); i++)
-        {
-            arrayI[i] = Properties::worldToChunk(arrayF[i]);
-        }
+        sf::Vector2f viewTL = {viewRect.left,viewRect.top};
+        sf::Vector2f viewBR = {viewRect.left+viewRect.width,viewRect.top+viewRect.height};
         sf::Vector2i coords;
-        for (coords.x = arrayI[0].x; coords.x <= arrayI[2].x; coords.x++)
+        sf::Vector2i b = Properties::worldToChunk(viewTL) + sf::Vector2i(-1,-1);
+        sf::Vector2i e = Properties::worldToChunk(viewBR) + sf::Vector2i(1,1);
+        for (coords.x = b.x; coords.x <= e.x; coords.x++)
         {
-            for (coords.y = arrayI[0].y; coords.y <= arrayI[2].y; coords.y++)
+            for (coords.y = b.y; coords.y <= e.y; coords.y++)
             {
                 if (!isChunkLoaded(coords))
                 {

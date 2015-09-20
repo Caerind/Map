@@ -19,7 +19,7 @@ class ChunkGenerator
         friend Map;
 
         ChunkGenerator();
-        ~ChunkGenerator();
+        virtual ~ChunkGenerator();
 
         virtual void generate(Chunk& chunk);
 

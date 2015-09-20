@@ -95,7 +95,7 @@ void Orthogonal::init()
         return globalCoordsToWorld(localCoords);
     };
 
-    map::TilesetManager::addTileset("tileset","Assets/Textures/tileset.png");
+    map::TilesetManager::addTileset("tileset","Assets/Textures/tilesetOrtho.png");
 
     map::TilesetManager::bind(1,"tileset",sf::IntRect(672,160,32,32),0); // Grass
     map::TilesetManager::bind(2,"tileset",sf::IntRect(224,386,32,32),1); // Water
