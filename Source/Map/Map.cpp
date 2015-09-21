@@ -1,5 +1,5 @@
 #include "Map.hpp"
-
+#include <iostream>
 namespace map
 {
 
@@ -174,8 +174,9 @@ void Map::render(sf::RenderTarget& target, sf::View const& view, int layer)
 
 void Map::setTileId(sf::Vector2i const& coords, int z, int id)
 {
-    sf::Vector2i cCoords = Properties::worldToChunk(Properties::globalCoordsToWorld(coords));
-    sf::Vector2i tCoords = Properties::worldToLocalCoords(Properties::globalCoordsToWorld(coords));
+    sf::Vector2f world = Properties::globalCoordsToWorld(coords);
+    sf::Vector2i cCoords = Properties::worldToChunk(world);
+    sf::Vector2i tCoords = Properties::worldToLocalCoords(world);
     if (isChunkLoaded(cCoords))
     {
         getChunk(cCoords).setTileId(tCoords,z,id);

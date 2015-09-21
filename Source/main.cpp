@@ -8,20 +8,21 @@
 #include "Map/Isometric.hpp"
 #include "Map/DefaultGen.hpp"
 #include "Map/ChunkGenerator.hpp"
+#include "../test/DebugScreen.hpp"
 
 #include <SFML/Network.hpp>
 
 int main()
 {
     int choice = 2;
-    do
+    /*do
     {
         std::cout << "Quel type de Map voulez-vous voir ?" << std::endl;
         std::cout << " - 1 : Orthogonal" << std::endl;
         std::cout << " - 2 : Isometric" << std::endl;
         std::cin >> choice;
     } while (choice < 1 && choice > 2);
-
+    */
     if (choice == 1)
     {
         Orthogonal::init();
@@ -33,9 +34,34 @@ int main()
 
     map::Map mMap(new DefaultGen());
 
+    ah::DebugScreen info;
+    info.showDebugScreen(true);
+    sf::Font font;
+    font.loadFromFile("Assets/Fonts/Sansation.ttf");
+    info.setFont(font);
     sf::RenderWindow window(sf::VideoMode(800,600),"Map");
     sf::View view = window.getView();
+    view.setCenter(sf::Vector2f(0,0));
+    mMap.update(view);
     sf::Clock clock;
+    sf::VertexArray a(sf::Points,800*600);
+    sf::Vector2f m;
+    for (m.x = -400.f; m.x < 400.f; m.x++)
+    {
+        for (m.y = -300.f; m.y < 300.f; m.y++)
+        {
+            a[m.x+400 + (800 * (m.y+300))].position = m;
+            sf::Vector2i c = map::Properties::worldToGlobalCoords(m);
+            if ((c.x+c.y)%2==0)
+            {
+                a[m.x+400 + (800 * (m.y+300))].color = sf::Color(0,255,0,180);
+            }
+            else
+            {
+                a[m.x+400 + (800 * (m.y+300))].color = sf::Color(0,0,255,180);
+            }
+        }
+    }
     while (window.isOpen())
     {
         sf::Event event;
@@ -80,21 +106,38 @@ int main()
 
         mMap.update(view);
 
+        sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window),view);
+        sf::Vector2i coords = map::Properties::worldToGlobalCoords(mousePos);
+        info.setDebugInfo("CoordsX",coords.x);
+        info.setDebugInfo("CoordsY",coords.y);
+        sf::Vector2f echo = map::Properties::globalCoordsToWorld(coords);
+        info.setDebugInfo("EchoX",echo.x);
+        info.setDebugInfo("EchoY",echo.y);
+        sf::Vector2i echoC = map::Properties::worldToGlobalCoords(echo);
+        info.setDebugInfo("EchoCX",echoC.x);
+        info.setDebugInfo("EchoCY",echoC.y);
+        sf::Vector2i chunk = map::Properties::worldToChunk(mousePos);
+        //info.setDebugInfo("ChunkX",chunk.x);
+        //info.setDebugInfo("ChunkY",chunk.y);
+        sf::Vector2i local = map::Properties::worldToLocalCoords(mousePos);
+        info.setDebugInfo("LocalX",local.x);
+        info.setDebugInfo("LocalY",local.y);
+
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
-            sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window),view);
-            std::cout << "--------------------------------" << std::endl;
-            std::cout << "mouse : " << (int)mousePos.x << "/" << (int)mousePos.y << std::endl;
-            sf::Vector2i coords = map::Properties::worldToGlobalCoords(mousePos);
-            std::cout << "coords : " << coords.x << "/" << coords.y << std::endl;
-            sf::Vector2f echo = map::Properties::globalCoordsToWorld(coords);
-            std::cout << "echo : " << echo.x << "/" << echo.y << std::endl;
             mMap.setTileId(coords,0,2);
+        }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+        {
+            mMap.setTileId(coords,0,1);
         }
 
         window.clear();
         window.setView(view);
         mMap.render(window,view,0);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) window.draw(a);
+        window.setView(window.getDefaultView());
+        window.draw(info);
         window.display();
     }
 

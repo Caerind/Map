@@ -3,6 +3,8 @@
 
 #include "Properties.hpp"
 
+#include <iostream>
+
 class Isometric : public map::Properties
 {
     public:

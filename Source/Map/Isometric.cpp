@@ -11,10 +11,10 @@ void Isometric::init()
     mPath = "Assets/World/Isometric/";
 
     mShape.setPointCount(4);
-    mShape.setPoint(0,sf::Vector2f(-getTileSize().x * 0.5f,0.f));
-    mShape.setPoint(1,sf::Vector2f(0.f,-getTileSize().y * 0.5f));
-    mShape.setPoint(2,sf::Vector2f(getTileSize().x * 0.5f,0.f));
-    mShape.setPoint(3,sf::Vector2f(0.f,getTileSize().y * 0.5f));
+    mShape.setPoint(0,sf::Vector2f(0.f, -getTileSize().y * 0.5f));
+    mShape.setPoint(1,sf::Vector2f(getTileSize().x * 0.5f, 0.f));
+    mShape.setPoint(2,sf::Vector2f(0.f,getTileSize().y * 0.5f));
+    mShape.setPoint(3,sf::Vector2f(-getTileSize().x * 0.5f,0.f));
 
     mNeighboor = [&](sf::Vector2i coords) -> std::vector<sf::Vector2i>
     {
@@ -38,50 +38,47 @@ void Isometric::init()
 
     mWorldToChunk = [&](sf::Vector2f world) -> sf::Vector2i
     {
-        sf::Vector2i coords;
-        sf::Vector2f chunkSize;
-        chunkSize.x = getTileSize().x * getChunkSize().x;
-        chunkSize.y = getTileSize().y * getChunkSize().y * 0.5f;
-        coords.x = ((int)world.x / (int)chunkSize.x);
-        if (world.x < 0 && (int)world.x % (int)chunkSize.x != 0)
+        sf::Vector2i coords = worldToGlobalCoords(world);
+        sf::Vector2i c = coords;
+        coords.x /= getChunkSize().x;
+        coords.y /= getChunkSize().y;
+        if (c.x < 0)
         {
             coords.x--;
         }
-        coords.y = ((int)world.y / (int)chunkSize.y);
-        if (world.y < 0 && (int)world.x % (int)chunkSize.y != 0)
+        if (c.y < 0)
         {
             coords.y--;
         }
         return coords;
     };
 
+    // TODO : Iso : Handle negative value
     mWorldToGlobal = [&](sf::Vector2f world) -> sf::Vector2i
     {
-        sf::Vector2f pos = world;
-        int i = pos.x / (getTileSize().x / 2);
-        int j = pos.y / (getTileSize().y / 2);
-        pos.x = pos.x - i * getTileSize().x * 0.5f;
-        pos.y = pos.y - j * getTileSize().y * 0.5f;
-        if (i%2 == j%2)
+        sf::Vector2f ts = sf::Vector2f(getTileSize()) * 0.5f; // OK
+        sf::Vector2i coords = sf::Vector2i(floor(world.x / ts.x), floor(world.y / ts.y)); // OK
+        sf::Vector2f pos = world - sf::Vector2f(coords.x * ts.x, coords.y * ts.y); // OK
+        if (coords.x%2 == coords.y%2)
         {
-            if (std::atan(pos.y/pos.x) > 3.14152/6)
+            if (std::atan2(ts.y - pos.y, pos.x) > 3.14152f/6.f)
             {
-                i--;
-                j--;
+                coords.x--;
+                coords.y--;
             }
         }
         else
         {
-            if (-std::atan(pos.y/pos.x) > -3.14152/6)
+            if (std::atan2(-pos.y, pos.x) > -3.14152f/6.f)
             {
-                j--;
+                coords.y--;
             }
             else
             {
-                i--;
+                coords.x--;
             }
         }
-        return sf::Vector2i(i/2,j);
+        return sf::Vector2i(coords.x/2,coords.y); // OK
     };
 
     mWorldToLocal = [&](sf::Vector2f world) -> sf::Vector2i
@@ -111,14 +108,14 @@ void Isometric::init()
     mGlobalToWorld = [&](sf::Vector2i globalCoords) -> sf::Vector2f
     {
         sf::Vector2f ret;
-        ret.y = globalCoords.y * getTileSize().y * 0.5f;
+        ret.y = globalCoords.y * getTileSize().y * 0.5f + getTileSize().y * 0.5f;
         if (globalCoords.y%2 == 0)
         {
-            ret.x = globalCoords.x * getTileSize().x;
+            ret.x = globalCoords.x * getTileSize().x + getTileSize().x * 0.5f;
         }
         else
         {
-            ret.x = (globalCoords.x + 0.5) * getTileSize().x;
+            ret.x = globalCoords.x * getTileSize().x + getTileSize().x;
         }
         return ret;
     };
