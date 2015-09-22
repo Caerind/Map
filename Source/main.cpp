@@ -8,21 +8,19 @@
 #include "Map/Isometric.hpp"
 #include "Map/DefaultGen.hpp"
 #include "Map/ChunkGenerator.hpp"
-#include "../test/DebugScreen.hpp"
 
 #include <SFML/Network.hpp>
 
 int main()
 {
     int choice = 2;
-    /*do
+    do
     {
         std::cout << "Quel type de Map voulez-vous voir ?" << std::endl;
         std::cout << " - 1 : Orthogonal" << std::endl;
         std::cout << " - 2 : Isometric" << std::endl;
         std::cin >> choice;
     } while (choice < 1 && choice > 2);
-    */
     if (choice == 1)
     {
         Orthogonal::init();
@@ -34,34 +32,11 @@ int main()
 
     map::Map mMap(new DefaultGen());
 
-    ah::DebugScreen info;
-    info.showDebugScreen(true);
-    sf::Font font;
-    font.loadFromFile("Assets/Fonts/Sansation.ttf");
-    info.setFont(font);
     sf::RenderWindow window(sf::VideoMode(800,600),"Map");
     sf::View view = window.getView();
     view.setCenter(sf::Vector2f(0,0));
     mMap.update(view);
     sf::Clock clock;
-    sf::VertexArray a(sf::Points,800*600);
-    sf::Vector2f m;
-    for (m.x = -400.f; m.x < 400.f; m.x++)
-    {
-        for (m.y = -300.f; m.y < 300.f; m.y++)
-        {
-            a[m.x+400 + (800 * (m.y+300))].position = m;
-            sf::Vector2i c = map::Properties::worldToGlobalCoords(m);
-            if ((c.x+c.y)%2==0)
-            {
-                a[m.x+400 + (800 * (m.y+300))].color = sf::Color(0,255,0,180);
-            }
-            else
-            {
-                a[m.x+400 + (800 * (m.y+300))].color = sf::Color(0,0,255,180);
-            }
-        }
-    }
     while (window.isOpen())
     {
         sf::Event event;
@@ -106,12 +81,7 @@ int main()
 
         mMap.update(view);
 
-        sf::Vector2f mp = window.mapPixelToCoords(sf::Mouse::getPosition(window),view);
-        info.setDebugInfo("MouseX",mp.x);
-        info.setDebugInfo("MouseY",mp.y);
-        sf::Vector2i coords = map::Properties::worldToGlobalCoords(mp);
-        info.setDebugInfo("CX",coords.x);
-        info.setDebugInfo("CY",coords.y);
+        sf::Vector2i coords = map::Properties::worldToGlobalCoords(window.mapPixelToCoords(sf::Mouse::getPosition(window),view));
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {
@@ -125,9 +95,7 @@ int main()
         window.clear();
         window.setView(view);
         mMap.render(window,view,0);
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) window.draw(a);
         window.setView(window.getDefaultView());
-        window.draw(info);
         window.display();
     }
 
