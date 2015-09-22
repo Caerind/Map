@@ -106,22 +106,12 @@ int main()
 
         mMap.update(view);
 
-        sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window),view);
-        sf::Vector2i coords = map::Properties::worldToGlobalCoords(mousePos);
-        info.setDebugInfo("CoordsX",coords.x);
-        info.setDebugInfo("CoordsY",coords.y);
-        sf::Vector2f echo = map::Properties::globalCoordsToWorld(coords);
-        info.setDebugInfo("EchoX",echo.x);
-        info.setDebugInfo("EchoY",echo.y);
-        sf::Vector2i echoC = map::Properties::worldToGlobalCoords(echo);
-        info.setDebugInfo("EchoCX",echoC.x);
-        info.setDebugInfo("EchoCY",echoC.y);
-        sf::Vector2i chunk = map::Properties::worldToChunk(mousePos);
-        //info.setDebugInfo("ChunkX",chunk.x);
-        //info.setDebugInfo("ChunkY",chunk.y);
-        sf::Vector2i local = map::Properties::worldToLocalCoords(mousePos);
-        info.setDebugInfo("LocalX",local.x);
-        info.setDebugInfo("LocalY",local.y);
+        sf::Vector2f mp = window.mapPixelToCoords(sf::Mouse::getPosition(window),view);
+        info.setDebugInfo("MouseX",mp.x);
+        info.setDebugInfo("MouseY",mp.y);
+        sf::Vector2i coords = map::Properties::worldToGlobalCoords(mp);
+        info.setDebugInfo("CX",coords.x);
+        info.setDebugInfo("CY",coords.y);
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
         {

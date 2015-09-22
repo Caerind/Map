@@ -12,7 +12,7 @@ void DebugScreen::setDebugInfo(std::string const& id, std::string const& value)
     if (mValues.find(id) == mValues.end())
     {
         sf::Text t;
-        t.setColor(sf::Color::White);
+        t.setColor(sf::Color::Black);
         mValues[id] = t;
         mValues[id].setString(id + " : " + value);
         update();

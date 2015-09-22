@@ -56,21 +56,43 @@ void Isometric::init()
     // TODO : Iso : Handle negative value
     mWorldToGlobal = [&](sf::Vector2f world) -> sf::Vector2i
     {
-        sf::Vector2f ts = sf::Vector2f(getTileSize()) * 0.5f;
+        sf::Vector2f s = {map::Properties::getTileSize().x * 0.5f, map::Properties::getTileSize().y * 0.5f};
+        sf::Vector2f mc = sf::Vector2f(floor(world.x / s.x), floor(world.y / s.y));
+        sf::Vector2f p = world - sf::Vector2f(mc.x * s.x, mc.y * s.y);
+        if (((int)mc.x + (int)mc.y) % 2 == 0)
+        {
+            float an = std::atan2(s.y - p.y,p.x) * 180.f / 3.14152f;
+            if (an > 30)
+            {
+                mc.x--;
+                mc.y--;
+            }
+            else
+            {
+            }
+        }
+        else
+        {
+            float an = std::atan2(-p.y,p.x) * 180.f / 3.14152f;
+            if (an > -30)
+            {
+                mc.y--;
+            }
+            else
+            {
+                mc.x--;
+            }
+        }
+        sf::Vector2i coords = sf::Vector2i(floor(mc.x * 0.5f),mc.y);
+        return coords;
+
+
+        /*sf::Vector2f ts = sf::Vector2f(getTileSize()) * 0.5f;
         sf::Vector2f coords = sf::Vector2f(floor(world.x / ts.x), floor(world.y / ts.y));
         sf::Vector2f pos = world - sf::Vector2f(coords.x * ts.x, coords.y * ts.y);
         if ((int)coords.x%2 == (int)coords.y%2)
         {
-            // THERE IS A PROBLEM HERE
-            if (coords.x < 0 || coords.y < 0)
-            {
-                if (std::atan2(ts.y - pos.y, pos.x) > 3.14152f/6.f)
-                {
-                    coords.x--;
-                    coords.y--;
-                }
-            }
-            else if (std::atan2(ts.y - pos.y, pos.x) > 3.14152f/6.f)
+            if (std::atan2(ts.y - pos.y, pos.x) > 3.14152f/6.f)
             {
                 coords.x--;
                 coords.y--;
@@ -87,7 +109,7 @@ void Isometric::init()
                 coords.x--;
             }
         }
-        return sf::Vector2i(floor((float)coords.x * 0.5f),coords.y);
+        return sf::Vector2i(floor(coords.x * 0.5f),coords.y);*/
     };
 
     mWorldToLocal = [&](sf::Vector2f world) -> sf::Vector2i
