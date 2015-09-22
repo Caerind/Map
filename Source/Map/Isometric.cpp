@@ -56,12 +56,21 @@ void Isometric::init()
     // TODO : Iso : Handle negative value
     mWorldToGlobal = [&](sf::Vector2f world) -> sf::Vector2i
     {
-        sf::Vector2f ts = sf::Vector2f(getTileSize()) * 0.5f; // OK
-        sf::Vector2i coords = sf::Vector2i(floor(world.x / ts.x), floor(world.y / ts.y)); // OK
-        sf::Vector2f pos = world - sf::Vector2f(coords.x * ts.x, coords.y * ts.y); // OK
-        if (coords.x%2 == coords.y%2)
+        sf::Vector2f ts = sf::Vector2f(getTileSize()) * 0.5f;
+        sf::Vector2f coords = sf::Vector2f(floor(world.x / ts.x), floor(world.y / ts.y));
+        sf::Vector2f pos = world - sf::Vector2f(coords.x * ts.x, coords.y * ts.y);
+        if ((int)coords.x%2 == (int)coords.y%2)
         {
-            if (std::atan2(ts.y - pos.y, pos.x) > 3.14152f/6.f)
+            // THERE IS A PROBLEM HERE
+            if (coords.x < 0 || coords.y < 0)
+            {
+                if (std::atan2(ts.y - pos.y, pos.x) > 3.14152f/6.f)
+                {
+                    coords.x--;
+                    coords.y--;
+                }
+            }
+            else if (std::atan2(ts.y - pos.y, pos.x) > 3.14152f/6.f)
             {
                 coords.x--;
                 coords.y--;
@@ -78,7 +87,7 @@ void Isometric::init()
                 coords.x--;
             }
         }
-        return sf::Vector2i(coords.x/2,coords.y); // OK
+        return sf::Vector2i(floor((float)coords.x * 0.5f),coords.y);
     };
 
     mWorldToLocal = [&](sf::Vector2f world) -> sf::Vector2i
